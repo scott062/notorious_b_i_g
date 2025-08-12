@@ -1,0 +1,91 @@
+{% load static %}
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Notorious BIGram Counter</title>
+    <link rel="stylesheet" href="{% static "bigrams/style.css" %}">
+  </head>
+  <body>
+    <form method="post">
+      {% csrf_token %}
+
+      <label for="text">Input text</label>
+      <textarea id="text" name="text" rows="10" placeholder="Paste text...">{{ text|default_if_none:"" }}</textarea>
+
+
+      <div class="opts">
+        {% for name, label in options %}
+          <label class="opt" for="opt-{{ name }}">
+            <input id="opt-{{ name }}" type="checkbox" name="{{ name }}" {% if name in checked_names %}checked{% endif %}>
+            {{ label }}
+          </label>
+        {% endfor %}
+
+        <label class="opt" for="topn">
+          Top N:
+          <input id="topn" type="number" name="top_n" value="{{ top_n|default:50 }}" min="1" max="500" style="width:6rem">
+        </label>
+      </div>
+
+      <button type="submit" style="margin-top: .5rem">Count bigrams</button>
+      <!-- TO-DO: disable button while processing -->
+    </form>
+
+    {% if pairs %}
+      <h3>Top bigrams</h3>
+
+      {{ labels|json_script:"labels_json" }}
+      {{ counts|json_script:"counts_json" }}
+
+      <canvas id="hist"></canvas>
+
+      <table>
+        <tbody>
+          {% for pair, c in pairs %}
+          <tr>
+            <td>{{ pair.0 }},{{ pair.1 }}</td>
+            <td>{{ c }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+      <!-- pinning? -->
+      <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+      <script>
+        const labelsEl = document.getElementById('labels_json');
+        const countsEl = document.getElementById('counts_json');
+
+        const labels = JSON.parse(labelsEl.textContent);
+        const counts = JSON.parse(countsEl.textContent);
+
+        const ctx = document.getElementById("hist");
+
+        const dataset = {
+          label: "Count",
+          data: counts,
+          backgroundColor: "#5A3E85",
+          borderRadius: 4,
+        };
+
+        new Chart(ctx, {
+          type: 'bar',
+          data: { labels: labels, datasets: [dataset] },
+          options: {
+            responsive: true,
+            animation: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              x: { ticks: { color: '#222', autoSkip: true } },
+              y: { ticks: { color: '#222' } }
+            }
+          }
+        });
+
+      </script>
+    {% endif %}
+  </body>
+</html>
+

@@ -45,6 +45,30 @@ ex (use any or all 3 possible samples):
 uv run python -m cli.bigram_cli --hist ./samples/crime_and_punish.txt ./samples/pride_and_prej.txt ./samples/moby_dick.txt
 ```
 
+**Inputs**
+- `FILES` = one or more text files; counts are aggregated
+- No files → reads from stdin
+- No files and no stdin → exits
+
+**Core options**
+- `--hist` -> show a simple bar chart
+- `--top INT` (default: 50) -> limit to top N
+- `-i, --interactive` -> prompt to toggle parsing
+
+**Parsing flags**
+- `--letters-only / --no-letters-only` (default: **true**)
+  keep only A–Z letters
+- `--ignore-all-punctuation / --no-ignore-all-punctuation` (default: **true**)
+  strip all punctuation
+- `--include-apostrophes` (default: **false**)
+  keep apostrophes inside words: `don't`
+- `--include-hyphens` (default: **false**)
+  keep hyphens inside words: `mother-in-law`
+- `--sentence-sensitive` (default: **false**)
+  reset bigram sequence at sentence end
+- `--line-separated` (default: **false**)
+  reset bigram sequence at each newline
+
 ### What the histogram does
 - Fits to your terminal width.
 - Long labels are condensed.

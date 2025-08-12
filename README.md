@@ -90,6 +90,7 @@ python manage.py runserver
 - Chart.js bar chart + simple table.
 - **Valid Words WIP**
 <img width="2517" height="1252" alt="image" src="https://github.com/user-attachments/assets/37574765-8256-4eb6-80f8-637ad9c714a5" />
+<img width="2511" height="1283" alt="image" src="https://github.com/user-attachments/assets/ded5145b-fd5a-4cdd-98b6-6d370bfa4365" />
 
 ## Parser
 

@@ -40,6 +40,10 @@ or (piped):
 ```bash
 echo "YOUR TEXT HERE" | PYTHONPATH=. uv run python -m cli.bigram_cli --hist
 ```
+ex (use any or all 3 possible samples):
+```bash
+uv run python -m cli.bigram_cli --hist ./samples/crime_and_punish.txt ./samples/pride_and_prej.txt ./samples/moby_dick.txt
+```
 
 ### What the histogram does
 - Fits to your terminal width.

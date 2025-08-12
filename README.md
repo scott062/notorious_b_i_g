@@ -88,6 +88,7 @@ python manage.py runserver
 - Paste text, parser options, choose **Top N** results.
 - Chart.js bar chart + simple table.
 - **Valid Words WIP**
+<img width="2517" height="1252" alt="image" src="https://github.com/user-attachments/assets/37574765-8256-4eb6-80f8-637ad9c714a5" />
 
 ## Parser
 

@@ -26,6 +26,7 @@ web/     # Django UI
 ```
 
 ## CLI
+<img width="2540" height="1164" alt="image" src="https://github.com/user-attachments/assets/940579a4-c40b-4cd5-ae56-5337c7623eb3" />
 
 ### Run
 Using Files:

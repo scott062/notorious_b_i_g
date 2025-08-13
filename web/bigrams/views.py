@@ -47,7 +47,7 @@ def index(request):
     try:
         counter = count_bigrams(text.splitlines(), options)
     except Exception:
-        logger.exception("count_bigrams failed")
+        logger.exception("count_bigrams failed") # Redundant but placeholder for future logging strategy
         ctx["error"] = "Parsing failed. Try different options or smaller input."
         return render(request, "bigrams/index.html", ctx)
 

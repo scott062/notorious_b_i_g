@@ -25,19 +25,19 @@ def ask_yes_no(prompt, default):
 
 @app.command(help="Count bigrams from files or stdin. Use -i for interactive mode.")
 def run(
+    paths: List[typer.FileText] = typer.Argument(None, help="Files to read, or read from stdin."),
     hist: bool = typer.Option(False, help="Show a bar chart of bigrams."),
     top: int = typer.Option(50, help="Show top # results."),
-
     # TODO: Clean up repeated options structure for typer and parser and interactive options
     # TODO: Re-think cascading relationships of punc
-    interactive: bool = typer.Option(False, "--interactive", "-i", help="Interactive helper."),
-    paths: List[typer.FileText] = typer.Argument(None, help="Files to read, or read from stdin."),
-    letters_only: bool = typer.Option(True, help="Only letters."),
-    ignore_all_punctuation: bool = typer.Option(True, help="Strip all punctuation."),
-    include_apostrophes: bool = typer.Option(False, help="Keep apostrophes within words."),
-    include_hyphens: bool = typer.Option(False, help="Keep hyphens within words."),
-    sentence_sensitive: bool = typer.Option(False, help="Reset bigram sequence across sentences."),
-    line_separated: bool = typer.Option(False, help="Reset bigram sequence at newline."),
+    interactive: bool = typer.Option(False, "-i", help="Interactive helper."),
+    letters_only: bool = typer.Option(True, "-l", help="Only letters."),
+    ignore_all_punctuation: bool = typer.Option(True, "-p", help="Strip all punctuation."),
+    include_apostrophes: bool = typer.Option(False, "-a", help="Keep apostrophes within words."),
+    include_hyphens: bool = typer.Option(False, "-y", help="Keep hyphens within words."),
+    sentence_sensitive: bool = typer.Option(False, "-s", help="Reset bigram sequence across sentences."),
+    line_separated: bool = typer.Option(False, "-n", help="Reset bigram sequence at newline."),
+    valid_words: bool = typer.Option(False, "-v", help="Reset bigram sequence at newline."),
 ):
     options = CountBigramOptions(
         letters_only=letters_only,
@@ -46,6 +46,7 @@ def run(
         include_hyphens=include_hyphens,
         sentence_sensitive=sentence_sensitive,
         line_separated=line_separated,
+        valid_words=valid_words,
     )
     # TODO: Break out interactive from file inputs in code
     if interactive:
@@ -53,6 +54,7 @@ def run(
 
         q_letters = ask_yes_no("Only letters?", letters_only)
         q_punctuation = ask_yes_no("Remove all punctuation?", ignore_all_punctuation)
+        q_valid = ask_yes_no("Only probable words?", valid_words)
 
         if q_punctuation:
             typer.echo("***punctuation removed*** apostrophes, hyphens, and sentence markings are ignored.")
@@ -70,6 +72,7 @@ def run(
             include_apostrophes=q_apostrophe,
             include_hyphens=q_hyphen,
             sentence_sensitive=q_sentence,
+            valid_words=q_valid
         )
 
         typer.echo("\nType a line of text to find bigrams.\n")
@@ -88,7 +91,7 @@ def run(
                 typer.echo(f"({a}, {b}): {c}")
         raise typer.Exit(code=0)
 
-    total: Counter = Counter()
+    total = Counter()
     if not paths and sys.stdin.isatty():
         typer.echo("Use -i, or provide file input(s).", err=True)
         raise typer.Exit(code=2)

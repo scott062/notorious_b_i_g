@@ -3,6 +3,8 @@ import re
 import string
 from collections import Counter
 from dataclasses import dataclass
+from functools import lru_cache
+from wordfreq import zipf_frequency
 
 SENTENCE_SPLIT_REGEX = re.compile(r"[.!?]+") # TODO: Enhance with actual NLP tokenization to better determine false positives like: Mr., Mrs., etc., .com
 WHITE_SPACE_REGEX = re.compile(r"\s+")
@@ -17,7 +19,7 @@ class CountBigramOptions:
     include_hyphens: bool = False # Parse hyphenated word as single word
     sentence_sensitive: bool = False # Whether to include bigrams as beginning of one sentence and the end of the last sentence
     line_separated: bool = False # Whether a new line resets the bigram count (extensibility with csv)
-    valid_words: bool = False # Check chars against English dictionary
+    valid_words: bool = False # Check chars against English likely frequency
 
     def __post_init__(self):
         if self.ignore_all_punctuation:
@@ -39,10 +41,12 @@ def count_bigrams(lines, options):
     counts = Counter()
     re_pattern = build_regex(options)
     previous_word = None # Keep track of latest word
+    previous_is_real = False
 
     for line in lines:
         if options.line_separated: # Reset bigram with new line
             previous_word = None
+            previous_is_real = False
 
         line = preprocess(line, options)
         if options.sentence_sensitive:
@@ -53,12 +57,21 @@ def count_bigrams(lines, options):
         for sentence in sentences:
             for match in re_pattern.finditer(sentence):
                 word = match.group(0)
-                if previous_word is not None:
-                    counts[(previous_word, word)] += 1
+
+                if options.valid_words:
+                    current_is_real = is_word(word)
+                    if previous_word is not None and previous_is_real and current_is_real:
+                        counts[(previous_word, word)] += 1
+                    previous_is_real = current_is_real
+                else:
+                    if previous_word is not None:
+                        counts[(previous_word, word)] += 1
+
                 previous_word = word
 
             if options.sentence_sensitive:
                 previous_word = None
+                previous_is_real = False
 
     return counts
 
@@ -76,7 +89,7 @@ def build_regex(options):
     if options.include_hyphens: # Include match for hyphenated word ex. mother-in-law
         word_pattern += "-"
 
-    if word_pattern:
+    if word_pattern: # Crude for now unless using look behind regex 3rd party package
         final = fr"{pattern}+(?:[{word_pattern}]{pattern}+)*"
     else:
         final = fr"{pattern}+"
@@ -89,4 +102,14 @@ def _remove_punctuation(text_input):
 
 def _remove_whitespace(text_input):
     return WHITE_SPACE_REGEX.sub(" ", text_input).strip()
+
+# TODO: Move to separate file, Enhancement: add dictionary or bloom filter with bespoke word storage
+@lru_cache(maxsize=75000)
+def is_word(text):
+    token = text.lower().strip()
+    if not token: # Don't cache empty
+        return False
+    return zipf_frequency(token, "en") > 2.7 # See zipf docs for settings
+
+
 

@@ -4,7 +4,7 @@ import string
 from collections import Counter
 from dataclasses import dataclass
 
-SENTENCE_SPLIT_REGEX = re.compile(r"[.!?]+") # TO-DO: Enhance with actual NLP tokenization to better determine false positives like: Mr., Mrs., etc., .com
+SENTENCE_SPLIT_REGEX = re.compile(r"[.!?]+") # TODO: Enhance with actual NLP tokenization to better determine false positives like: Mr., Mrs., etc., .com
 WHITE_SPACE_REGEX = re.compile(r"\s+")
 PUNCTUATION_TABLE = str.maketrans("", "", string.punctuation) # Covers all ASCII punctuation
 

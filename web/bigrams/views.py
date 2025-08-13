@@ -6,7 +6,7 @@ logger = logging.getLogger(__name__)
 
 TOP_N_DEFAULT = 50
 TOP_N_MAX = 500
-TEXT_MAX_CHARS = 200_000
+TEXT_MAX_CHARS = 200000
 
 OPTIONS = [
     ("ignore_all_punctuation", "Ignore punctuation"),
@@ -16,7 +16,7 @@ OPTIONS = [
     ("include_hyphens", "Include hyphens"),
     ("sentence_sensitive", "Sentence sensitive"),
     ("line_separated", "Line separated"),
-    ("valid_words", "Valid words"),
+    ("valid_words", "Valid words"), # TODO
 ]
 
 def index(request):

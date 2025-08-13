@@ -24,12 +24,13 @@
 
         <label class="opt" for="topn">
           Top N:
-          <input id="topn" type="number" name="top_n" value="{{ top_n|default:50 }}" min="1" max="500" style="width:6rem">
-        </label>
+          <input id="topn" type="number" name="top_n" value="{{ top_n|default:50 }}" min="1" max="500">
+        </lab-el>
       </div>
 
-      <button type="submit" style="margin-top: .5rem">Count bigrams</button>
-      <!-- TO-DO: disable button while processing -->
+      <button type="submit">Count bigrams</button>
+      <!-- TODO: disable button while processing -->
+      <!-- TODO: Fix refresh on submit -->
     </form>
 
     {% if pairs %}

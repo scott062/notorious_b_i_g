@@ -35,7 +35,7 @@ uv run python -m cli.bigram_cli --hist file/path/here
 ```
 or (interactive):
 ```bash
-uv run python -m cli.bigram_cli --interactive
+uv run python -m cli.bigram_cli -i
 ```
 or (piped):
 ```bash
@@ -57,18 +57,20 @@ uv run python -m cli.bigram_cli --hist ./samples/crime_and_punish.txt ./samples/
 - `-i, --interactive` -> prompt to toggle parsing
 
 **Parsing flags**
-- `--letters-only / --no-letters-only` (default: **true**)
+- `-l` (default: **true**)
   keep only A–Z letters
-- `--ignore-all-punctuation / --no-ignore-all-punctuation` (default: **true**)
+- `-p` (default: **true**)
   strip all punctuation
-- `--include-apostrophes` (default: **false**)
+- `-a` (default: **false**)
   keep apostrophes inside words: `don't`
-- `--include-hyphens` (default: **false**)
+- `-y` (default: **false**)
   keep hyphens inside words: `mother-in-law`
-- `--sentence-sensitive` (default: **false**)
+- `-s` (default: **false**)
   reset bigram sequence at sentence end
-- `--line-separated` (default: **false**)
+- `-s` (default: **false**)
   reset bigram sequence at each newline
+- `-v` (default: **false**)
+  only consider probable valid words in english
 
 ### What the histogram does
 - Fits to your terminal width.

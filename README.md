@@ -48,8 +48,8 @@ uv run python -m cli.bigram_cli --hist ./samples/crime_and_punish.txt ./samples/
 
 **Inputs**
 - `FILES` = one or more text files; counts are aggregated
-- No files → reads from stdin
-- No files and no stdin → exits
+- No files -> reads from stdin
+- No files and no stdin -> exits
 
 **Core options**
 - `--hist` -> show a simple bar chart
